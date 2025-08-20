@@ -2,39 +2,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { MapPin, Phone, Clock, Users, Trophy, Star, Settings } from "lucide-react"
 import Link from "next/link"
+import Header from "@/components/shared/header"
+import Footer from "@/components/shared/footer"  
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
-                <Trophy className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold text-slate-900">Lavalle Padel</h1>
-            </div>
-            <nav className="hidden md:flex items-center space-x-8">
-              <Link href="#ubicaciones" className="text-slate-600 hover:text-emerald-600 transition-colors">
-                Ubicaciones
-              </Link>
-              <Link href="#nosotros" className="text-slate-600 hover:text-emerald-600 transition-colors">
-                Nosotros
-              </Link>
-              <Link href="#contacto" className="text-slate-600 hover:text-emerald-600 transition-colors">
-                Contacto
-              </Link>
-              <Link href="/admin" className="text-slate-600 hover:text-emerald-600 transition-colors">
-                <Settings className="h-4 w-4 inline mr-1" />
-                Admin
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
-
+      <Header />
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -99,97 +73,134 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Locations Section */}
+            {/* Locations Section */}
       <section id="ubicaciones" className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h3 className="text-3xl font-bold text-slate-900 mb-4">Nuestras Ubicaciones</h3>
             <p className="text-lg text-slate-600">3 sedes estratégicamente ubicadas en Rosario</p>
           </div>
+
           <div className="grid md:grid-cols-3 gap-8">
             {/* Centro */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
+            <Card className="hover:shadow-lg transition-shadow overflow-hidden h-full flex flex-col">
+              {/* Imagen */}
+              <div className="h-48 md:h-52 w-full overflow-hidden">
+                <img
+                  src="/canchas/cancha-abasto.webp"
+                  alt="Lavalle Padel Centro"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              {/* Contenido */}
+              <CardContent className="p-6 flex flex-col flex-grow">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-xl font-semibold text-slate-900">Lavalle Padel Centro</h4>
+                  <h4 className="text-xl font-semibold text-slate-900">Lavalle Padel Center</h4>
                   <div className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-sm font-medium">4 canchas</div>
                 </div>
-                <div className="space-y-3 text-slate-600">
+
+                <div className="space-y-3 text-slate-600 flex-grow">
                   <div className="flex items-start space-x-2">
                     <MapPin className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                    <span>Av. Pellegrini 1234, Centro, Rosario</span>
+                    <span>San Nicolás 965. Rosario, Santa Fe</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Phone className="h-5 w-5 text-emerald-600" />
-                    <span>+54 341 123-4567</span>
+                    <span>341-5761895</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Clock className="h-5 w-5 text-emerald-600" />
-                    <span>Lun-Jue: 8:00-23:00 | Vie-Sáb: 8:00-24:00</span>
+                    <span>Todos los días | 8:00am - 12:00am</span>
                   </div>
                 </div>
                 <Link href="/reservar">
-                  <Button className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700">Reservar en Centro</Button>
+                  <Button className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700">
+                    Reservar
+                  </Button>
                 </Link>
               </CardContent>
             </Card>
 
             {/* Norte */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
+            <Card className="hover:shadow-lg transition-shadow overflow-hidden h-full flex flex-col">
+              <div className="h-48 md:h-52 w-full overflow-hidden">
+                <img
+                  src="/canchas/cancha-sannicolas.webp"
+                  alt="Lavalle Padel Norte"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <CardContent className="p-6 flex flex-col flex-grow">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-xl font-semibold text-slate-900">Lavalle Padel Norte</h4>
+                  <h4 className="text-xl font-semibold text-slate-900">Lavalle Padel</h4>
                   <div className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-sm font-medium">6 canchas</div>
                 </div>
-                <div className="space-y-3 text-slate-600">
+
+                <div className="space-y-3 text-slate-600 flex-grow">
                   <div className="flex items-start space-x-2">
                     <MapPin className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                    <span>Bv. Oroño 2567, Barrio Norte, Rosario</span>
+                    <span>Lavalle 1546. Rosario, Santa Fe</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Phone className="h-5 w-5 text-emerald-600" />
-                    <span>+54 341 234-5678</span>
+                    <span>341 4307366</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Clock className="h-5 w-5 text-emerald-600" />
-                    <span>Lun-Jue: 7:00-23:00 | Vie-Sáb: 7:00-24:00</span>
+                    <span>Lun-Vie: 8:00am - 00:00am | Sáb-Dom: 9:00am - 12:00am</span>
                   </div>
                 </div>
+
                 <Link href="/reservar">
-                  <Button className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700">Reservar en Norte</Button>
+                  <Button className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700">
+                    Reservar
+                  </Button>
                 </Link>
               </CardContent>
             </Card>
 
             {/* Sur */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
+            <Card className="hover:shadow-lg transition-shadow overflow-hidden h-full flex flex-col">
+              <div className="h-48 md:h-52 w-full overflow-hidden">
+                <img
+                  src="/canchas/cancha-lavalle.webp"
+                  alt="Lavalle Padel Sur"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+
+              <CardContent className="p-6 flex flex-col flex-grow">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-xl font-semibold text-slate-900">Lavalle Padel Sur</h4>
+                  <h4 className="text-xl font-semibold text-slate-900">Lavalle Padel Abasto</h4>
                   <div className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-sm font-medium">5 canchas</div>
                 </div>
-                <div className="space-y-3 text-slate-600">
+
+                <div className="space-y-3 text-slate-600 flex-grow">
                   <div className="flex items-start space-x-2">
                     <MapPin className="h-5 w-5 text-emerald-600 mt-0.5 flex-shrink-0" />
-                    <span>Av. Circunvalación 3890, Zona Sur, Rosario</span>
+                    <span>Laprida 2252. Rosario, Santa Fe</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Phone className="h-5 w-5 text-emerald-600" />
-                    <span>+54 341 345-6789</span>
+                    <span>341 576-1895</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Clock className="h-5 w-5 text-emerald-600" />
-                    <span>Lun-Jue: 8:00-22:30 | Vie-Sáb: 8:00-23:30</span>
+                    <span>Todos los días | 8:00am - 12:00am</span>
                   </div>
                 </div>
+
                 <Link href="/reservar">
-                  <Button className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700">Reservar en Sur</Button>
+                  <Button className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700">
+                    Reservar
+                  </Button>
                 </Link>
               </CardContent>
             </Card>
           </div>
         </div>
       </section>
+
 
       {/* About Section */}
       <section id="nosotros" className="py-16 bg-slate-50">
@@ -230,50 +241,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-slate-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
-                  <Trophy className="h-5 w-5 text-white" />
-                </div>
-                <h5 className="text-xl font-bold">Lavalle Padel</h5>
-              </div>
-              <p className="text-slate-400">El mejor club de padel de Rosario con 3 sedes y reservas online.</p>
-            </div>
-            <div>
-              <h6 className="font-semibold mb-4">Sedes</h6>
-              <ul className="space-y-2 text-slate-400">
-                <li>Centro - Av. Pellegrini 1234</li>
-                <li>Norte - Bv. Oroño 2567</li>
-                <li>Sur - Av. Circunvalación 3890</li>
-              </ul>
-            </div>
-            <div>
-              <h6 className="font-semibold mb-4">Contacto</h6>
-              <ul className="space-y-2 text-slate-400">
-                <li>Centro: +54 341 123-4567</li>
-                <li>Norte: +54 341 234-5678</li>
-                <li>Sur: +54 341 345-6789</li>
-              </ul>
-            </div>
-            <div>
-              <h6 className="font-semibold mb-4">Horarios</h6>
-              <ul className="space-y-2 text-slate-400">
-                <li>Lun - Jue: 7:00 - 23:00</li>
-                <li>Vie - Sáb: 7:00 - 24:00</li>
-                <li>Domingo: 8:00 - 23:00</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
-            <p>&copy; 2024 Lavalle Padel. Todos los derechos reservados.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
+    
   )
 }

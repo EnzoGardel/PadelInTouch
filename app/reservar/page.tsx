@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MapPin, Calendar, Clock, User, CreditCard, ArrowLeft, ArrowRight } from "lucide-react";
-import { createReservation, type ReservationData } from "@/app/actions"; // <-- usa tu server action MySQL
+import { MapPin, Calendar, Clock, User, CreditCard, ArrowRight } from "lucide-react";
+import { createReservation, type ReservationData } from "@/app/actions";
+import SedeCard from "@/components/shared/SedeCard";
 
 // Tipos esperados por los endpoints de tu API
 interface Location {
@@ -15,6 +16,9 @@ interface Location {
   name: string;
   address?: string;
   phone?: string;
+  image?: string;
+  courtsCount?: number;
+  hours?: string;
 }
 
 interface Court {
@@ -47,6 +51,15 @@ export default function ReservarPage() {
     phone: "",
   });
 
+  // util: asigna imagen según nombre (ajusta paths si usas otras rutas)
+  function imageFor(name: string) {
+    const n = name.toLowerCase();
+    if (n.includes("centro")) return "/images/centro.jpg";
+    if (n.includes("norte")) return "/images/norte.jpg";
+    if (n.includes("sur")) return "/images/sur.jpg";
+    return "/images/club-default.jpg"; // opcional
+  }
+
   // Cargar sedes
   useEffect(() => {
     loadLocations();
@@ -76,8 +89,15 @@ export default function ReservarPage() {
       // GET /api/locations  ->  [{ id, name, address?, phone? }]
       const res = await fetch("/api/locations", { cache: "no-store" });
       if (!res.ok) throw new Error("No se pudieron cargar las ubicaciones");
-      const data = (await res.json()) as Location[];
-      setLocations(Array.isArray(data) ? data : []);
+      const base = (await res.json()) as Location[];
+
+      // enriquecemos con imagen (y, si querés, horarios/canchas fijos)
+      const data: Location[] = (Array.isArray(base) ? base : []).map((l) => ({
+        ...l,
+        image: l.image ?? imageFor(l.name),
+      }));
+
+      setLocations(data);
     } catch (error) {
       console.error("Error loading locations:", error);
       setLocations([]);
@@ -89,7 +109,6 @@ export default function ReservarPage() {
   async function loadCourts(locationId: number) {
     setLoading(true);
     try {
-      // GET /api/courts?locationId=123 ->  [{ id, name, locationId }]
       const res = await fetch(`/api/courts?locationId=${locationId}`, { cache: "no-store" });
       if (!res.ok) throw new Error("No se pudieron cargar las canchas");
       const data = (await res.json()) as Court[];
@@ -106,7 +125,6 @@ export default function ReservarPage() {
     setLoading(true);
     try {
       // GET /api/availability?courtId=1&date=YYYY-MM-DD
-      // Devuelve [{ startTime, endTime }] -> lo mapeamos a { start_time, end_time }
       const res = await fetch(`/api/availability?courtId=${courtId}&date=${date}`, { cache: "no-store" });
       if (!res.ok) throw new Error("No se pudo cargar la disponibilidad");
       const data = (await res.json()) as { startTime: string; endTime: string }[];
@@ -117,7 +135,6 @@ export default function ReservarPage() {
       setAvailableSlots(mapped);
     } catch (error) {
       console.error("Error loading available slots:", error);
-      // Optional: fallback estático si querés
       setAvailableSlots([]);
     } finally {
       setLoading(false);
@@ -126,7 +143,6 @@ export default function ReservarPage() {
 
   const nextStep = () => setStep((s) => Math.min(4, s + 1));
   const prevStep = () => setStep((s) => Math.max(1, s - 1));
-
   const formatTime = (time: string) => time.slice(0, 5); // "HH:mm"
 
   const getTomorrowDate = () => {
@@ -217,32 +233,35 @@ export default function ReservarPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {/* Step 1: Location Selection */}
+            {/* Step 1: Location Selection (con SedeCard seleccionable, sin botón) */}
             {step === 1 && (
               <div className="space-y-4">
                 {loading ? (
                   <div className="text-center py-8">Cargando ubicaciones...</div>
                 ) : (
-                  <div className="grid md:grid-cols-3 gap-4">
-                    {locations.map((location) => (
-                      <div
-                        key={location.id}
-                        className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                          selectedLocation?.id === location.id
-                            ? "border-emerald-600 bg-emerald-50"
-                            : "border-slate-200 hover:border-emerald-300"
-                        }`}
-                        onClick={() => {
-                          setSelectedLocation(location);
+                  <div className="grid md:grid-cols-3 gap-6">
+                    {locations.map((loc) => (
+                      <SedeCard
+                        key={loc.id}
+                        seleccionable
+                        selected={selectedLocation?.id === loc.id}
+                        onSelect={(id: string) => {
+                          const l = locations.find((x) => String(x.id) === id) || null;
+                          setSelectedLocation(l);
                           setSelectedCourt(null);
                           setSelectedDate("");
                           setSelectedSlot(null);
                         }}
-                      >
-                        <h3 className="font-semibold text-slate-900 mb-2">{location.name}</h3>
-                        {!!location.address && <p className="text-sm text-slate-600 mb-2">{location.address}</p>}
-                        {!!location.phone && <p className="text-sm text-slate-500">{location.phone}</p>}
-                      </div>
+                        sede={{
+                          id: String(loc.id),
+                          nombre: loc.name,
+                          imagen: loc.image ?? imageFor(loc.name), // mapeado/enriquecido
+                          direccion: loc.address ?? "",
+                          telefono: loc.phone ?? "",
+                          horario: loc.hours,      // ✔️ nombre que usa SedeCard
+                          canchas: loc.courtsCount // ✔️ nombre que usa SedeCard
+                        }}
+                      />
                     ))}
                   </div>
                 )}
@@ -404,13 +423,8 @@ export default function ReservarPage() {
           <Button
             variant="outline"
             onClick={() => {
-              if (step === 1) {
-                // en el primer paso: salir al home
-                router.push("/");
-              } else {
-                // en los demás pasos: retroceder
-                setStep((prev) => prev - 1);
-              }
+              if (step === 1) router.push("/");
+              else prevStep();
             }}
           >
             {step === 1 ? "Salir" : "Anterior"}
