@@ -1,68 +1,115 @@
 // app/api/reservations/route.ts
-import { NextResponse } from 'next/server';
-import mysql from 'mysql2/promise';
+import { NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
-export async function POST(req: Request) {
-  const body = await req.json();
-  const { userId, courtId, reservationDate, startTime, endTime, totalAmount, notes } = body;
+export const runtime = "nodejs";
 
-  if (!userId || !courtId || !reservationDate || !startTime || !endTime) {
-    return NextResponse.json({ ok: false, error: 'Faltan campos' }, { status: 400 });
+/**
+ * Cliente Supabase con Service Role (solo en servidor)
+ */
+function getSupabaseSR() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    throw new Error(
+      "Faltan variables de entorno: NEXT_PUBLIC_SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY"
+    );
   }
+  return createClient(url, key);
+}
 
-  const url = new URL(process.env.DATABASE_URL!);
-  const conn = await mysql.createConnection({
-    host: url.hostname,
-    port: Number(url.port || 3306),
-    user: decodeURIComponent(url.username),
-    password: decodeURIComponent(url.password),
-    database: url.pathname.replace(/^\//, ''),
-  });
-
-  const lockKey = `court_${courtId}`;
+/**
+ * Espera el mismo body que la versión MySQL:
+ * { userId, courtId, reservationDate, startTime, endTime, totalAmount, notes }
+ * - reservationDate: "YYYY-MM-DD" (local)
+ * - startTime/endTime: "HH:mm" (local)
+ */
+export async function POST(req: Request) {
   try {
-    await conn.query('SELECT GET_LOCK(?, 5);', [lockKey]);
-    await conn.beginTransaction();
+    const body = await req.json();
+    const {
+      userId, // (si no lo usás, lo ignoramos)
+      courtId,
+      reservationDate,
+      startTime,
+      endTime,
+      totalAmount,
+      notes,
+    } = body ?? {};
 
-    const [rows] = await conn.query(
-      `
-      SELECT id FROM Reservation
-      WHERE courtId = ?
-        AND DATE(reservationDate) = DATE(?)
-        AND STR_TO_DATE(CONCAT(DATE(reservationDate), ' ', ?, ':00'), '%Y-%m-%d %H:%i:%s') < endDt
-        AND STR_TO_DATE(CONCAT(DATE(reservationDate), ' ', ?, ':00'), '%Y-%m-%d %H:%i:%s') > startDt
-      LIMIT 1
-      FOR UPDATE
-      `,
-      [courtId, reservationDate, endTime, startTime]
-    );
-
-    // @ts-ignore
-    if (rows.length > 0) {
-      await conn.rollback();
-      return NextResponse.json({ ok: false, error: 'El horario se superpone con otra reserva.' }, { status: 409 });
+    if (!courtId || !reservationDate || !startTime || !endTime) {
+      return NextResponse.json(
+        { ok: false, error: "Faltan campos" },
+        { status: 400 }
+      );
     }
 
-    await conn.query(
-      `
-      INSERT INTO Reservation
-        (userId, courtId, reservationDate, startTime, endTime, totalAmount, notes, status, paymentStatus)
-      VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', 'pending')
-      `,
-      [userId, courtId, reservationDate, startTime, endTime, totalAmount ?? null, notes ?? null]
-    );
+    const supabase = getSupabaseSR();
 
-    await conn.commit();
-    return NextResponse.json({ ok: true }, { status: 201 });
+    /**
+     * RECOMENDADO: RPC que encapsula la lógica de lock + validación de solapamiento en DB.
+     * Ajusta el nombre/params si tu función se llama distinto.
+     *
+     * Ejemplo esperado en PostgreSQL:
+     *
+     *  create or replace function public.create_booking_locked(
+     *    p_court_id bigint,
+     *    p_date date,
+     *    p_start_time text, -- "HH:mm"
+     *    p_end_time   text, -- "HH:mm"
+     *    p_total_amount numeric,
+     *    p_notes text
+     *  ) returns table (reservation_id bigint) ...
+     *
+     */
+    const { data, error } = await supabase.rpc("create_booking_locked", {
+      p_court_id: Number(courtId),
+      p_date: reservationDate,
+      p_start_time: startTime,
+      p_end_time: endTime,
+      p_total_amount: totalAmount ?? null,
+      p_notes: notes ?? null,
+    });
+
+    if (error) {
+      const msg = error.message || "";
+      // Mensajes más amigables para conflictos de agenda
+      if (
+        msg.includes("bookings_no_overlap") ||
+        msg.includes("no_available_court") ||
+        error.code === "23P01" // exclusion_violation
+      ) {
+        return NextResponse.json(
+          { ok: false, error: "El horario se superpone con otra reserva." },
+          { status: 409 }
+        );
+      }
+      console.error("[reservations POST] RPC error:", error);
+      return NextResponse.json(
+        { ok: false, error: "Error al crear la reserva" },
+        { status: 500 }
+      );
+    }
+
+    const reservationId =
+      (data as any)?.reservation_id ?? (typeof data === "number" ? data : null);
+
+    if (!reservationId) {
+      // Si tu RPC devuelve shape distinto, ajustá acá.
+      return NextResponse.json(
+        { ok: false, error: "No se pudo obtener el ID de la reserva" },
+        { status: 500 }
+      );
+    }
+
+    // Opcional: si querés persistir userId/notas extra en otra tabla, hacelo aquí.
+
+    return NextResponse.json({ ok: true, reservationId }, { status: 201 });
   } catch (e: any) {
-    try { await conn.rollback(); } catch {}
-    const msg = e?.message || String(e);
-    if (msg.includes('uq_res_exact')) {
-      return NextResponse.json({ ok: false, error: 'Ese turno ya fue tomado.' }, { status: 409 });
-    }
-    return NextResponse.json({ ok: false, error: msg }, { status: 500 });
-  } finally {
-    try { await conn.query('SELECT RELEASE_LOCK(?)', [lockKey]); } catch {}
-    await conn.end();
+    console.error("[reservations POST] crash:", e);
+    return NextResponse.json(
+      { ok: false, error: e?.message ?? "Error interno" },
+      { status: 500 }
+    );
   }
 }
