@@ -1,59 +1,49 @@
-// app/api/availability/route.ts
-import { NextResponse } from 'next/server';
-import mysql from 'mysql2/promise';
+import { type NextRequest, NextResponse } from "next/server"
+import { createClient } from "@/lib/supabase/server"
+import { parseISO, format } from "date-fns"
+import { utcToZonedTime } from "date-fns-tz"
 
-const OPEN = '08:00';
-const CLOSE = '23:00';
-const SLOT_MINUTES = 90;
-const STEP_MINUTES = 30;
+const ARG_TZ = "America/Argentina/Cordoba"
 
-function toMinutes(t: string) { const [h,m]=t.split(':').map(Number); return h*60+m; }
-function fromMinutes(n: number) { const h=String(Math.floor(n/60)).padStart(2,'0'); const m=String(n%60).padStart(2,'0'); return `${h}:${m}`; }
-
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const courtId = Number(searchParams.get('courtId'));
-  const date = searchParams.get('date'); // "YYYY-MM-DD"
-
-  if (!courtId || !date) {
-    return NextResponse.json({ error: 'courtId y date son requeridos' }, { status: 400 });
-  }
-
-  const url = new URL(process.env.DATABASE_URL!);
-  const conn = await mysql.createConnection({
-    host: url.hostname,
-    port: Number(url.port || 3306),
-    user: decodeURIComponent(url.username),
-    password: decodeURIComponent(url.password),
-    database: url.pathname.replace(/^\//, ''),
-  });
-
+export async function GET(request: NextRequest) {
   try {
-    const [rows] = await conn.query(
-      `SELECT startDt, endDt FROM Reservation
-       WHERE courtId = ? AND DATE(reservationDate) = DATE(?)`,
-      [courtId, date]
-    ) as any;
+    const { searchParams } = new URL(request.url)
+    const clubId = searchParams.get("clubId")      // es branch_id
+    const date = searchParams.get("date")          // YYYY-MM-DD
 
-    const existing = rows.map((r:any)=>({ start: new Date(r.startDt).getTime(), end: new Date(r.endDt).getTime() }));
-
-    // generar slots crudos
-    const slots: {startTime:string; endTime:string}[] = [];
-    for (let s = toMinutes(OPEN); s + SLOT_MINUTES <= toMinutes(CLOSE); s += STEP_MINUTES) {
-      const st = fromMinutes(s);
-      const et = fromMinutes(s + SLOT_MINUTES);
-      slots.push({ startTime: st, endTime: et });
+    if (!clubId || !date) {
+      return NextResponse.json({ error: "Missing required parameters: clubId, date" }, { status: 400 })
     }
 
-    // filtrar los que pisan
-    const ts = (hhmm:string)=> new Date(`${date}T${hhmm}:00`).getTime();
-    const free = slots.filter(({startTime,endTime})=>{
-      const ns = ts(startTime), ne = ts(endTime);
-      return !existing.some((e:any)=> ns < e.end && ne > e.start);
-    });
+    const supabase = await createClient()
 
-    return NextResponse.json(free);
-  } finally {
-    await conn.end();
+    const { data, error } = await supabase.rpc("get_branch_availability", {
+      p_branch_id: Number(clubId),
+      p_date: date,
+    })
+
+    if (error) {
+      console.error("Database error:", error)
+      return NextResponse.json({ error: "Failed to fetch availability" }, { status: 500 })
+    }
+
+    // shape que ya entiende el front (start/end HH:mm)
+    const slots = (data ?? []).map((slot: any) => {
+      const start = format(utcToZonedTime(parseISO(slot.start_utc), ARG_TZ), "HH:mm")
+      const end   = format(utcToZonedTime(parseISO(slot.end_utc),   ARG_TZ), "HH:mm")
+      return {
+        id: `${slot.start_utc}|${slot.end_utc}`, // útil si lo necesitás
+        startTime: start,
+        endTime: end,
+        startUtc: slot.start_utc,
+        endUtc: slot.end_utc,
+        available: slot.available,                // por si querés mostrar “Quedan X”
+      }
+    })
+
+    return NextResponse.json({ slots })
+  } catch (error) {
+    console.error("API error:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

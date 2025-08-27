@@ -1,54 +1,33 @@
 import { NextResponse } from "next/server";
-import mysql from "mysql2/promise";
-
-function connFromEnv() {
-  const u = new URL(process.env.DATABASE_URL!);
-  return {
-    host: u.hostname,
-    port: Number(u.port || 3306),
-    user: decodeURIComponent(u.username),
-    password: decodeURIComponent(u.password),
-    database: u.pathname.replace(/^\//, ""),
-  };
-}
+import { createClient } from "@/lib/supabase/server";
 
 export async function GET() {
-  let conn: mysql.Connection | null = null;
   try {
-    conn = await mysql.createConnection(connFromEnv());
+    const supabase = await createClient();
 
-    const [rows] = await conn.query(
-      `
-      SELECT 
-        l.id,
-        l.name,
-        l.address,
-        l.phone,
-        l.image,
-        l.opening,              -- lo usamos como "hours"
-        COUNT(c.id) AS courtsCount
-      FROM Location l
-      LEFT JOIN Court c ON c.locationId = l.id
-      GROUP BY l.id, l.name, l.address, l.phone, l.image, l.opening
-      ORDER BY l.id ASC
-      `
-    ) as any;
+    const { data, error } = await supabase
+      .from("branches")
+      .select("id, name, address, phone, image_url, created_at")
+      .order("name", { ascending: true });
 
-    const out = rows.map((r: any) => ({
-      id: r.id,
-      name: r.name,
-      address: r.address ?? "",
-      phone: r.phone ?? "",
-      image: r.image ?? "",
-      hours: r.opening ?? "",            // mapeamos opening -> hours
-      courtsCount: Number(r.courtsCount) || 0,
+    if (error) {
+      console.error("Database error:", error);
+      return NextResponse.json({ error: "Failed to fetch locations" }, { status: 500 });
+    }
+
+    const locations = (data ?? []).map((b: any) => ({
+      id: String(b.id),
+      name: b.name,
+      address: b.address ?? null,
+      phone: b.phone ?? null,
+      imageUrl: b.image_url ?? null,
+      tz: "America/Argentina/Cordoba",
+      created_at: b.created_at ?? new Date().toISOString(),
     }));
 
-    return NextResponse.json(out);
-  } catch (e: any) {
-    console.error("[GET /api/locations] error:", e?.message || e);
-    return NextResponse.json({ error: "Error al cargar sedes" }, { status: 500 });
-  } finally {
-    try { await conn?.end(); } catch {}
+    return NextResponse.json({ locations });
+  } catch (e) {
+    console.error("API error:", e);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

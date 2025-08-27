@@ -54,9 +54,9 @@ export default function ReservarPage() {
   // util: asigna imagen según nombre (ajusta paths si usas otras rutas)
   function imageFor(name: string) {
     const n = name.toLowerCase();
-    if (n.includes("centro")) return "/images/centro.jpg";
-    if (n.includes("norte")) return "/images/norte.jpg";
-    if (n.includes("sur")) return "/images/sur.jpg";
+    if (n.includes("abasto")) return "/canchas/Cancha-abasto.webp";
+    if (n.includes("nicolas")) return "/canchas/Cancha-sannicolas.webp";
+    if (n.includes("lavalle")) return "/images/Cancha-lavalle.webp";
     return "/images/club-default.jpg"; // opcional
   }
 
@@ -157,12 +157,12 @@ export default function ReservarPage() {
     setLoading(true);
     try {
       const reservationData: ReservationData = {
-        courtId: selectedCourt.id,
+        courtId: selectedCourt.id.toString(),
         date: selectedDate,
         startTime: selectedSlot.start_time,
         endTime: selectedSlot.end_time,
         userDetails,
-        totalAmount: 15000,
+        totalAmount: 1,
       };
 
       const result = await createReservation(reservationData);
@@ -173,7 +173,7 @@ export default function ReservarPage() {
           court: selectedCourt.name,
           date: selectedDate,
           time: `${formatTime(selectedSlot.start_time)} - ${formatTime(selectedSlot.end_time)}`,
-          amount: "15000",
+          amount: "1",
         });
         router.push(`/pago?${params.toString()}`);
       } else {

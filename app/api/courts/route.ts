@@ -1,33 +1,41 @@
 import { NextResponse } from "next/server";
-import mysql from "mysql2/promise";
+import { createClient } from "@/lib/supabase/server";
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const locationId = searchParams.get("locationId");
+const BUCKET = "canchas";
+export const dynamic = "force-dynamic";
 
-  const url = new URL(process.env.DATABASE_URL!);
-  const conn = await mysql.createConnection({
-    host: url.hostname, port: Number(url.port || 3306),
-    user: decodeURIComponent(url.username), password: decodeURIComponent(url.password),
-    database: url.pathname.replace(/^\//, ""),
+export async function GET() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("branches")
+    .select("id, name, address, phone, image_url, created_at")
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Failed to fetch branches" }, { status: 500 });
+  }
+
+  const clubs = (data ?? []).map((b: any) => {
+    let imageUrl: string | null = b.image_url ?? null;
+
+    // si viene solo el nombre del archivo, lo convierto a URL pública del CDN
+    if (imageUrl && !/^https?:\/\//i.test(imageUrl)) {
+      const { data: pub } = supabase.storage.from(BUCKET).getPublicUrl(imageUrl);
+      imageUrl = pub.publicUrl;
+    }
+
+    return {
+      id: String(b.id),
+      name: b.name,
+      address: b.address ?? null,
+      phone: b.phone ?? null,
+      imageUrl,
+      tz: "America/Argentina/Cordoba",
+      created_at: b.created_at ?? new Date().toISOString(),
+    };
   });
 
-  try {
-    if (locationId) {
-      const [rows] = await conn.query(
-        "SELECT id, name, locationId FROM Court WHERE locationId = ? ORDER BY name",
-        [Number(locationId)]
-      );
-      // @ts-ignore
-      return NextResponse.json(rows);
-    } else {
-      const [rows] = await conn.query(
-        "SELECT id, name, locationId FROM Court ORDER BY name"
-      );
-      // @ts-ignore
-      return NextResponse.json(rows);
-    }
-  } finally {
-    await conn.end();
-  }
+  return NextResponse.json({ clubs });
 }

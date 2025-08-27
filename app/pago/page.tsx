@@ -21,7 +21,7 @@ export default function PagoPage() {
   const court = searchParams.get("court")
   const date = searchParams.get("date")
   const time = searchParams.get("time")
-  const amount = searchParams.get("amount") || "15000"
+  const amount = searchParams.get("amount") || "1"
 
   useEffect(() => {
     if (!reservationId) {
