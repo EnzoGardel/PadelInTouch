@@ -30,11 +30,11 @@ export function AboutSection() {
   ]
 
   return (
-    <section id="sobre-nosotros" className="py-20 bg-muted/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="sobre-nosotros" className="py-20 ">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white/20 p rounded-3xl p-10">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Sobre nosotros</h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Sobre nosotros</h2>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             Más que un club, somos una comunidad apasionada por el pádel que ha formado campeones y sigue creciendo cada
             día.
           </p>
@@ -42,9 +42,9 @@ export function AboutSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {features.map((feature, index) => (
-            <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
+            <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300 bg-white/90">
               <CardContent className="p-6">
-                <div className="w-16 h-16 bg-black/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                   <feature.icon />
                 </div>
                 <h3 className="text-lg font-semibold mb-3">{feature.title}</h3>
@@ -55,10 +55,10 @@ export function AboutSection() {
         </div>
 
         {/* Champion highlight */}
-        <div className=" hover:shadow-lg transition-shadow duration-300 rounded-2xl p-8 md:p-12 text-center border border-primary/10">
+        <div className=" bg-white/90 hover:shadow-lg transition-shadow duration-300 rounded-2xl p-8 md:p-12 text-center border border-primary/10">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-center mb-6">
-              <div className="w-20 h-20 bg-black/30 rounded-full flex items-center justify-center">
+              <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center">
                 <Icons.Trophy />
               </div>
             </div>

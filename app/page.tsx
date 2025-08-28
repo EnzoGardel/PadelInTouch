@@ -1,8 +1,8 @@
-import { Navbar } from "@/components/navbar"
+import { Navbar } from "@/components/shared/navbar"
 import { HeroSection } from "@/components/hero-section"
 import { AboutSection } from "@/components/about-section"
 import { ContactSection } from "@/components/contact-section"
-import { Footer } from "@/components/footer"
+import { Footer } from "@/components/shared/footer"
 import { createClient } from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
 import SedeSection from '@/components/SedeSection'
@@ -14,7 +14,8 @@ export default async function HomePage() {
   const { data: todos } = await supabase.from('todos').select()
 
   return (
-    <main className="min-h-screen">
+    
+    <main className="min-h-screen">  
       <Navbar />
       <HeroSection />
       <SedeSection />
@@ -27,5 +28,6 @@ export default async function HomePage() {
         ))}
     </ul>
     </main>
+    
   )
 }

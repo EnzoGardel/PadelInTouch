@@ -74,7 +74,7 @@ const SedeCard: React.FC<Props> = ({
   return (
     <div
       className={[
-        "border rounded-2xl shadow-md overflow-hidden transition select-none bg-white",
+        "border-0 rounded-2xl shadow-md overflow-hidden transition select-none bg-white",
         clickable ? "cursor-pointer hover:shadow-lg" : "cursor-default",
         selected ? "ring-2 ring-primary" : "",
         disabled ? "opacity-60 pointer-events-none" : "",
@@ -106,11 +106,11 @@ const SedeCard: React.FC<Props> = ({
 
         <div className="mt-2 space-y-1 text-gray-700 text-sm">
           <p className="flex items-center gap-2">
-            <MapPin size={16} />
+            <MapPin className="text-primary" size={22} />
             {sede.direccion}
           </p>
           <p className="flex items-center gap-2">
-            <Phone size={16} />
+            <Phone className="text-primary" size={22} />
             {/* Hace el teléfono clickeable */}
             {sede.telefono ? (
               <a href={`tel:${sede.telefono.replace(/\s+/g, "")}`} className="hover:underline">

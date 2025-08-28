@@ -1,23 +1,30 @@
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import Image from "next/image"
+"use client";
+
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import HeroRotator from "@/components/HeroRotator";
 
 export function HeroSection() {
   return (
-    <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/modern-padel-court.png"
-          alt="Cancha de pádel profesional"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+    <section
+      id="inicio"
+      className="relative min-h-screen flex items-center overflow-hidden"
+    >
+      {/* Fondo a pantalla completa */}
+      <HeroRotator
+        className="-z-10"
+        mode="background"
+        slides={[
+          { src: "/HeroRotator/Cancha-3.webp", alt: "Vista aérea de las canchas de pádel" },
+          { src: "/HeroRotator/Cancha-4.webp", alt: "Vista aérea de las canchas de pádel" },
+          { src: "/HeroRotator/Cancha-5.webp", alt: "Vista aérea de las canchas de pádel" },
+          { src: "/HeroRotator/Cancha-6.webp", alt: "Vista aérea de las canchas de pádel" },
+        ]}
+        intervalMs={6000}
+        overlay="bg-black/60"
+      />
 
-      {/* Content */}
+       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
           Las mejores canchas de <span className="text-primary">pádel</span> en Rosario
@@ -55,7 +62,6 @@ export function HeroSection() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </div>
-
     </section>
-  )
+  );
 }

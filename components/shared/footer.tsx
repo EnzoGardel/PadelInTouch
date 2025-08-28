@@ -1,49 +1,102 @@
-import { Trophy } from "lucide-react"     
+import Link from "next/link"
+import { Icons } from "@/components/icons"
+import { Button } from "@/components/ui/button"
+import { MessageCircle, Instagram , Facebook } from "lucide-react"
 
-
-export default function Footer() {
-  return (     
-      <footer className="bg-slate-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
-                  <Trophy className="h-5 w-5 text-white" />
-                </div>
-                <h5 className="text-xl font-bold">Lavalle Padel</h5>
-              </div>
-              <p className="text-slate-400">El mejor club de padel de Rosario con 3 sedes y reservas online.</p>
+export function Footer() {
+  return (
+    <footer className="bg-foreground text-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Brand */}
+          <div className="col-span-1 md:col-span-2">
+            <div className="flex items-center space-x-2 mb-4 gap-2">
+              <img src="/Logo-padel.webp" alt="Logo Lavalle PadelClub" className="h-10 w-10 rounded-full " />
+              <span className="font-bold text-xl">Lavalle PadelClub</span>
             </div>
-            <div>
-              <h6 className="font-semibold mb-4">Sedes</h6>
-              <ul className="space-y-2 text-slate-400">
-                <li>Centro - Av. Pellegrini 1234</li>
-                <li>Norte - Bv. Oroño 2567</li>
-                <li>Sur - Av. Circunvalación 3890</li>
-              </ul>
-            </div>
-            <div>
-              <h6 className="font-semibold mb-4">Contacto</h6>
-              <ul className="space-y-2 text-slate-400">
-                <li>Centro: +54 341 123-4567</li>
-                <li>Norte: +54 341 234-5678</li>
-                <li>Sur: +54 341 345-6789</li>
-              </ul>
-            </div>
-            <div>
-              <h6 className="font-semibold mb-4">Horarios</h6>
-              <ul className="space-y-2 text-slate-400">
-                <li>Lun - Jue: 7:00 - 23:00</li>
-                <li>Vie - Sáb: 7:00 - 24:00</li>
-                <li>Domingo: 8:00 - 23:00</li>
-              </ul>
-            </div>
+            <p className="text-background/80 mb-6 max-w-md">
+              Las mejores canchas de pádel en Rosario. Superficie de alto rendimiento, iluminación profesional y una
+              comunidad apasionada por el deporte.
+            </p>
+                    <div className="flex space-x-4">
+                    <Button
+                        size="lg"
+                        variant="default"
+                        className=" hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-colors bg-gray-600"
+                    >
+                        <Facebook className="h-4 w-4" />
+                    </Button>
+                    <a href="https://www.instagram.com/ls.negociosinmobiliarios/" target="_blank">  
+                    <Button
+                        size="lg"
+                        variant="default"
+                        className="hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white hover:border-transparent transition-all bg-gray-600">
+                        <Instagram className="h-4 w-4" />
+                    </Button>
+                    </a>
+                    <a target="blank" href="https://wa.me/5493411234567">
+                        <Button
+                        size="lg"
+                        variant="default"
+                        className="hover:bg-green-600 hover:text-white hover:border-green-600 transition-colors  bg-gray-600"
+                        >
+                        <MessageCircle className="h-4 w-4" />
+                        </Button>
+                    </a>
+                    </div>
           </div>
-          <div className="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
-            <p>&copy; 2024 Lavalle Padel. Todos los derechos reservados.</p>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">Enlaces rápidos</h3>
+            <ul className="space-y-2">
+              <li>
+                <Link href="#inicio" className="text-background/80 hover:text-primary transition-colors">
+                  Inicio
+                </Link>
+              </li>
+              <li>
+                <Link href="#sobre-nosotros" className="text-background/80 hover:text-primary transition-colors">
+                  Sobre nosotros
+                </Link>
+              </li>
+              <li>
+                <Link href="#reservar" className="text-background/80 hover:text-primary transition-colors">
+                  Reservar cancha
+                </Link>
+              </li>
+              <li>
+                <Link href="#contacto" className="text-background/80 hover:text-primary transition-colors">
+                  Contacto
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h3 className="font-semibold text-lg mb-4">Contacto</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start space-x-3">
+                <Icons.MapPin />
+                <span className="text-background/80">Lavalle 123, Rosario, Santa Fe</span>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Icons.Phone />
+                <span className="text-background/80">+54 341 555-1234</span>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Icons.Mail />
+                <span className="text-background/80">contacto@lavallepadelclub.com</span>
+              </li>
+            </ul>
           </div>
         </div>
-      </footer>
-    )
-        }
+
+        <div className="border-t border-background/20 mt-8 pt-8 text-center">
+          <p className="text-background/60">© 2024 Lavalle Padel Club. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </footer>
+  )
+}

@@ -49,16 +49,29 @@ export const metadata: Metadata = {
     },
   },
 }
-export const viewport ={ width: "device-width", initialScale: 1, maximumScale: 1, }
+
+export const viewport = { width: "device-width", initialScale: 1, maximumScale: 1 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es" className={`${workSans.variable} ${openSans.variable} antialiased scroll-smooth `}>
-      <body className="font-sans">
+    <html
+      lang="es"
+      className={`${workSans.variable} ${openSans.variable} antialiased scroll-smooth`}
+    >
+      {/* Evitar cualquier fondo sólido aquí */}
+      <body className="font-sans relative min-h-screen bg-transparent">
+        {/* Fondo global fijo detrás de toda la app */}
+        <div
+          className="
+            fixed inset-0 -z-10 pointer-events-none
+            bg-[#000000]
+            bg-[radial-gradient(#ffffff33_1px,#00091d_1px)]
+            bg-[size:20px_20px]
+          "
+        />
+
         {children}
         <Toaster />
       </body>
