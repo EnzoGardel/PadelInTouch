@@ -1,9 +1,11 @@
+// ruta: app/api/locations/route.ts
 import { NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createStaticClient } from "@/lib/supabase/server";
 
+// ✅ Versión estática (no cookies) y cacheable
 export async function GET() {
   try {
-    const supabase = await createClient();
+    const supabase = createStaticClient();
 
     const { data, error } = await supabase
       .from("branches")
@@ -20,12 +22,17 @@ export async function GET() {
       name: b.name,
       address: b.address ?? null,
       phone: b.phone ?? null,
-      imageUrl: b.image_url ?? null,
+      image_url: b.image_url ?? null, // <- consistente con el front
       tz: "America/Argentina/Cordoba",
       created_at: b.created_at ?? new Date().toISOString(),
     }));
 
-    return NextResponse.json({ locations });
+    // CDN cache: 1h con SWR
+    const headers = {
+      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=60",
+    };
+
+    return NextResponse.json({ locations }, { headers });
   } catch (e) {
     console.error("API error:", e);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

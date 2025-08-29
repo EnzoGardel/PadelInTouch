@@ -15,10 +15,10 @@ export function HeroSection() {
         className="-z-10"
         mode="background"
         slides={[
-          { src: "/HeroRotator/Cancha-3.webp", alt: "Vista aérea de las canchas de pádel" },
-          { src: "/HeroRotator/Cancha-4.webp", alt: "Vista aérea de las canchas de pádel" },
-          { src: "/HeroRotator/Cancha-5.webp", alt: "Vista aérea de las canchas de pádel" },
-          { src: "/HeroRotator/Cancha-6.webp", alt: "Vista aérea de las canchas de pádel" },
+          { src: "/HeroRotator/cancha-3.webp", alt: "Vista aérea de las canchas de pádel" },
+          { src: "/HeroRotator/cancha-4.webp", alt: "Vista aérea de las canchas de pádel" },
+          { src: "/HeroRotator/cancha-5.webp", alt: "Vista aérea de las canchas de pádel" },
+          { src: "/HeroRotator/cancha-6.webp", alt: "Vista aérea de las canchas de pádel" },
         ]}
         intervalMs={6000}
         overlay="bg-black/60"
