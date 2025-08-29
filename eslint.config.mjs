@@ -1,14 +1,11 @@
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-import { FlatCompat } from "@eslint/eslintrc";
-import path from "node:path";
+// eslint.config.mjs
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
 import next from '@next/eslint-plugin-next';
 
-const compat = new FlatCompat({ baseDirectory: path.resolve() });
-
 export default [
-  // Reglas Next (core web vitals)
-  next.configs['core-web-vitals'],
+  // Ignora artefactos de build
+  { ignores: ['.next/**', 'node_modules/**'] },
 
   // Reglas base JS
   js.configs.recommended,
@@ -16,6 +13,6 @@ export default [
   // Reglas TS sin type-check (rápidas)
   ...tseslint.configs.recommended,
 
-  // Reglas Next (equivale a "extends: ['next', 'next/core-web-vitals']")
-  ...compat.extends("next", "next/core-web-vitals")
+  // Reglas de Next (Core Web Vitals)
+  next.configs['core-web-vitals'],
 ];
