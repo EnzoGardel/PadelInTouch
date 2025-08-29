@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# install-deps.sh
+set -euo pipefail
+
+# Runtime
+pnpm add next@^15 react@18.3.1 react-dom@18.3.1 \
+  @supabase/ssr@^0.5.0 @supabase/supabase-js@^2.44.0 \
+  sharp@^0.33.4 date-fns@^3.6.0 date-fns-tz@^3.0.0 \
+  react-day-picker@^9 lucide-react@^0.453.0 \
+  class-variance-authority@^0.7.0 clsx@^2 tailwind-merge@^2 \
+  react-parallax-tilt@^1 \
+  @radix-ui/react-slot@^1 @radix-ui/react-toast@^1 @radix-ui/react-accordion@^1 @radix-ui/react-alert-dialog@^1 \
+  @radix-ui/react-aspect-ratio@^1 @radix-ui/react-avatar@^1 @radix-ui/react-collapsible@^1 @radix-ui/react-context-menu@^1 \
+  @radix-ui/react-hover-card@^1 @radix-ui/react-menubar@^1 @radix-ui/react-navigation-menu@^1 @radix-ui/react-progress@^1 \
+  @radix-ui/react-slider@^1 @radix-ui/react-toggle@^1 @radix-ui/react-toggle-group@^1 @radix-ui/react-select@^2 \
+  @radix-ui/react-dropdown-menu@^2 @radix-ui/react-scroll-area@^1 @radix-ui/react-tabs@^1 @radix-ui/react-label@^2 \
+  @radix-ui/react-separator@^1 @radix-ui/react-switch@^1 @radix-ui/react-checkbox@^1 @radix-ui/react-radio-group@^1 \
+  react-hook-form@^7 react-resizable-panels@^2 embla-carousel-react@^8 recharts@^2 sonner@^1 vaul@^0.9 input-otp@^1 zod@^3 next-themes@^0.3 mercadopago@^2
+
+# Dev
+pnpm add -D eslint@^9 @eslint/js@^9 @eslint/eslintrc@^3 typescript-eslint@^8 prettier@^3 \
+  typescript@^5 @types/node@^22 @types/react@^18 @types/react-dom@^18 \
+  tailwindcss@^4 @tailwindcss/postcss@^4 postcss@^8 \
+  eslint-config-next@^15 @netlify/plugin-nextjs@^5.12.1 \
+  tw-animate-css@1.3.3

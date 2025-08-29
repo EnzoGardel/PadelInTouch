@@ -8,12 +8,11 @@ import { Button } from "@/components/ui/button";
 export type Sede = {
   id: string;
   nombre: string;
-  imagen: string | null;   // puede ser path ("Cancha-lavalle.webp") o URL absoluta
+  imagen: string | null; // puede ser path ("carpeta/archivo.webp") o URL absoluta
   direccion: string;
   telefono: string;
   horario?: string;
   canchas?: number;
-  // si tu API trae otros campos, dejalos acá sin problema
 };
 
 type Props = {
@@ -27,34 +26,31 @@ type Props = {
 };
 
 /**
- * Construye la URL pública a partir del path guardado en la DB.
- * - Si ya es URL absoluta o empieza con "/", la devuelve tal cual.
- * - Si es un path de Storage, arma la URL pública del bucket "canchas".
- * - Si pasás width/height/quality, usa el endpoint de render (resize por CDN).
+ * Construye una URL de imagen de Supabase usando SIEMPRE el endpoint /object (sin transforms).
+ * De esta forma, quien optimiza es Next/Image y evitamos 400 por doble optimización.
+ * También normaliza el path si viene con "public/" o si duplica el nombre del bucket.
  */
-function buildImageUrl(
-  pathOrUrl?: string | null,
-  opts?: { bucket?: string; width?: number; height?: number; quality?: number }
-) {
+function buildImageUrl(pathOrUrl?: string | null, opts?: { bucket?: string }) {
   if (!pathOrUrl) return "/placeholder-branch.webp";
-  if (/^(https?:)?\/\//i.test(pathOrUrl) || pathOrUrl.startsWith("/")) return pathOrUrl;
 
-  const base = process.env.NEXT_PUBLIC_SUPABASE_URL; // https://xxxxx.supabase.co
+  // Si ya es absoluta o empieza con "/", devolver tal cual (sirve también para imágenes locales en /public)
+  if (/^(https?:)?\/\//i.test(pathOrUrl) || pathOrUrl.startsWith("/")) {
+    return pathOrUrl;
+  }
+
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL; // p.ej. https://xxxxx.supabase.co
+  if (!base) {
+    // Fallback local si faltara la env
+    return `/${encodeURI(pathOrUrl)}`;
+  }
+
   const bucket = opts?.bucket ?? "canchas";
-  const path = pathOrUrl.replace(/^\/+/, ""); // evita // en la URL
 
-  if (!base) return `/${encodeURI(path)}`; // fallback local si faltara la env
+  // Normalizar: quitar "public/" al inicio y un posible prefijo redundante del bucket
+  let p = pathOrUrl.trim().replace(/^public\//, "").replace(/^\/+/, "");
+  if (p.startsWith(bucket + "/")) p = p.slice(bucket.length + 1);
 
-  const { width, height, quality } = opts ?? {};
-  const qs = new URLSearchParams();
-  if (width) qs.set("width", String(width));
-  if (height) qs.set("height", String(height));
-  if (quality) qs.set("quality", String(quality));
-  const hasTransform = qs.toString().length > 0;
-
-  return hasTransform
-    ? `${base}/storage/v1/render/image/public/${bucket}/${encodeURI(path)}?${qs.toString()}`
-    : `${base}/storage/v1/object/public/${bucket}/${encodeURI(path)}`;
+  return `${base}/storage/v1/object/public/${bucket}/${encodeURI(p)}`;
 }
 
 const SedeCard: React.FC<Props> = ({
@@ -68,15 +64,15 @@ const SedeCard: React.FC<Props> = ({
 }) => {
   const clickable = seleccionable && !showReservarButton;
 
-  // Usamos render del CDN para servir una imagen optimizada
-  const imgSrc = buildImageUrl(sede.imagen, { width: 1024, height: 512, quality: 80 });
+  // Usamos /object (sin transforms). Next hará la optimización.
+  const imgSrc = buildImageUrl(sede.imagen, { bucket: "canchas" });
 
   return (
     <div
       className={[
         "border-0 rounded-2xl shadow-md overflow-hidden transition select-none bg-white",
         clickable ? "cursor-pointer hover:shadow-lg" : "cursor-default",
-        selected ? "ring-2 ring-primary" : "",
+        selected ? "ring-5 ring-primary" : "",
         disabled ? "opacity-60 pointer-events-none" : "",
       ].join(" ")}
       onClick={clickable ? () => onSelect?.(sede.id) : undefined}
@@ -85,7 +81,7 @@ const SedeCard: React.FC<Props> = ({
       <div className="relative w-full h-48">
         <Image
           src={imgSrc}
-          alt={sede.nombre}
+          alt={sede.nombre ?? "Sede"}
           fill
           className="object-cover"
           sizes="(max-width: 768px) 100vw, 33vw"
@@ -111,7 +107,7 @@ const SedeCard: React.FC<Props> = ({
           </p>
           <p className="flex items-center gap-2">
             <Phone className="text-primary" size={22} />
-            {/* Hace el teléfono clickeable */}
+            {/* Teléfono clickeable */}
             {sede.telefono ? (
               <a href={`tel:${sede.telefono.replace(/\s+/g, "")}`} className="hover:underline">
                 {sede.telefono}

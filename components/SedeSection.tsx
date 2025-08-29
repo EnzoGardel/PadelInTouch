@@ -7,33 +7,30 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock } from "lucide-react";
 
-/** Cargamos react-parallax-tilt únicamente en cliente (sin SSR) */
+// Tilt solo en cliente
 const Tilt = dynamic(() => import("react-parallax-tilt"), { ssr: false });
 
-/** Wrapper con fallback para evitar parpadeos / problemas de hidratación */
+// Wrapper: evita glare inicial y habilita tilt tras el mount
 function CardWithTilt({ children }: { children: React.ReactNode }) {
-  const [ready, setReady] = React.useState(false);
-  React.useEffect(() => setReady(true), []);
-
-  if (!ready) {
-    // Fallback sin tilt en el primer render del cliente
-    return <div className="will-change-auto">{children}</div>;
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+  if (!mounted) {
+    return <div className="will-change-transform">{children}</div>;
   }
 
   return (
     <Tilt
+      // Desactivamos glare para evitar el "velo" blanco inicial
+      glareEnable={false}
+      // Habilitamos el tilt solo cuando ya montó en cliente
+      tiltEnable={mounted}
+      scale={1.035}
       tiltMaxAngleX={8}
       tiltMaxAngleY={8}
-      perspective={900}
-      transitionSpeed={300}
-      gyroscope={true}
-      reset={true}
-      glareEnable
-      glareMaxOpacity={0.18}
-      glareColor="rgba(255,255,255,0.95)"
-      glareBorderRadius="16px"
-      scale={1.02}
-      className="will-change-transform motion-reduce:!transform-none"
+      transitionSpeed={1400}
+      gyroscope={true}   
+      reset
+      className="will-change-transform"
     >
       {children}
     </Tilt>

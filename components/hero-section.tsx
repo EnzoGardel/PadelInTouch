@@ -34,7 +34,7 @@ export function HeroSection() {
           pádel mundial en sus inicios.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-lg px-8 py-6">
+          <Button asChild size="lg" className="bg-primary hover:bg-[#0084ff] text-lg px-8 py-6">
             <Link href="/reserva">Reservá tu cancha</Link>
           </Button>
           <Button
