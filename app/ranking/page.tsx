@@ -1,7 +1,7 @@
 import { Footer } from "@/components/shared/footer"
 import { Navbar } from "@/components/shared/navbar";
 
-export default function RankingLayout({ children }: { children: React.ReactNode }) {
+export default function RankingLayout() {
   return (
     <>
       <Navbar />
