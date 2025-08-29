@@ -28,7 +28,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const {
-      userId, // (si no lo usás, lo ignoramos)
+      _userId, // (si no lo usás, lo ignoramos)
       courtId,
       reservationDate,
       startTime,

@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   // cookies() es síncrono; no uses await
   const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
+  const _supabase = createClient(cookieStore);
 
   return (
     <main className="min-h-screen">

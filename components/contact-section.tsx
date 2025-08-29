@@ -4,10 +4,9 @@ import type React from "react"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import { Icons } from "@/components/icons"
 import { 
@@ -21,7 +20,7 @@ import {
 
 
 export function ContactSection() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [_isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -50,14 +49,14 @@ export function ContactSection() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleInputChange = (field: string, value: string) => {
+  const _handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }))
     }
   }
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const _onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!validateForm()) return
@@ -97,7 +96,7 @@ export function ContactSection() {
     }
   }
 
-  const contactInfo = [
+  const _contactInfo = [
     {
       icon: Icons.MapPin,
       title: "Dirección",

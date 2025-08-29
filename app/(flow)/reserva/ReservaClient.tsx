@@ -46,9 +46,9 @@ export default function ReservaClient() {
 
   // Datos cargados desde API
   const [locations, setLocations] = useState<Club[]>([]);
-  const [courts, setCourts] = useState<Court[]>([]);
+  const [_courts, setCourts] = useState<Court[]>([]);
   const [availableSlots, setAvailableSlots] = useState<AvailabilityItem[]>([]);
-  const PRICE = 1;
+  const _PRICE = 1;
 
   // Flags de carga
   const [loadingClubs, setLoadingClubs] = useState(false);
@@ -230,7 +230,7 @@ export default function ReservaClient() {
       }
 
       window.location.href = pref.init_point;
-    } catch (err) {
+    } catch (_err) {
       setLoadingPay(false);
       alert("Error inesperado al iniciar el pago.");
     }

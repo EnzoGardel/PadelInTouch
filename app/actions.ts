@@ -116,7 +116,7 @@ export async function updatePaymentStatus(
   const supabase = createClient();
 
   // Si NO tenés la columna payment_status, comentá esta línea y dejá solo el update de state.
-  const payment_status: string = status;
+  const _payment_status: string = status;
 
   const state =
     status === "paid" ? "confirmed" :

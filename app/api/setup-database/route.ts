@@ -94,7 +94,7 @@ export async function POST() {
       CREATE POLICY "Allow all operations on contact_messages" ON public.contact_messages FOR ALL USING (true);
     `
 
-    const { error: schemaError } = await supabase.rpc("exec_sql", { sql: schemaSQL })
+    const { _error: schemaError } = await supabase.rpc("exec_sql", { sql: schemaSQL })
 
     if (schemaError) {
       // Try direct SQL execution if RPC doesn't work
@@ -107,7 +107,7 @@ export async function POST() {
       }
     }
 
-    const seedSQL = `
+    const _seedSQL = `
       -- Insert Lavalle Padel Club
       INSERT INTO public.clubs (id, name, address, phone, email) 
       VALUES (
