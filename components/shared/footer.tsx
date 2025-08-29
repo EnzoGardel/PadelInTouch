@@ -5,14 +5,14 @@ import { MessageCircle, Instagram , Facebook } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-background">
+    <footer className="bg-[#1E1E22]/95 backdrop-blur supports-[backdrop-filter]:bg-[#1E1E22]/80 border-b border-white/10 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4 gap-2">
               <img src="/Logo-padel.webp" alt="Logo Lavalle PadelClub" className="h-10 w-10 rounded-full " />
-              <span className="font-bold text-xl">Lavalle PadelClub</span>
+              <span className="font-bold text-xl text-white">Lavalle PadelClub</span>
             </div>
             <p className="text-background/80 mb-6 max-w-md">
               Las mejores canchas de pádel en Rosario. Superficie de alto rendimiento, iluminación profesional y una
@@ -48,7 +48,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">Enlaces rápidos</h3>
+            <h3 className="font-semibold text-lg mb-4 text-white">Enlaces rápidos</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="#inicio" className="text-background/80 hover:text-primary transition-colors">
@@ -75,7 +75,7 @@ export function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">Contacto</h3>
+            <h3 className="font-semibold text-lg text-white mb-4">Contacto</h3>
             <ul className="space-y-3">
               <li className="flex items-start space-x-3">
                 <Icons.MapPin />

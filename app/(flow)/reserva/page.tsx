@@ -309,7 +309,7 @@ export default function ReservarPage() {
             {step === 1 && (
               <div className="space-y-4 ">
                 {loadingClubs ? (
-                  <div className="text-center py-8 ">Cargando sucursales...</div>
+                  <div className="text-center py-8 text-slate-200">Cargando sucursales...</div>
                 ) : (
                   <div className="grid md:grid-cols-3 gap-6 min-h-[16rem] ">
                     {locations.map((loc) => (
@@ -341,7 +341,7 @@ export default function ReservarPage() {
               </div>
             )}
 
-            {/* Step 2: Fecha + Cancha (la cancha se autoselecciona) */}
+            {/* Step 2: Fecha  */}
             {step === 2 && (
               <div className="space-y-4">
                 <div className="mb-4">
@@ -402,20 +402,31 @@ export default function ReservarPage() {
                 {availableSlots.length > 0 ? (
                   <div className="grid md:grid-cols-3 gap-3">
                     {availableSlots.map((slot, index) => (
-                      <div
-                        key={index}
-                        className={`p-3 border bg-white/90 rounded-lg cursor-pointer text-center transition-colors hover:bg-gray-300  ${
-                          selectedSlot?.startTime === slot.startTime
-                            ? "border-primary bg-[#0084ff] "
-                            : "border-slate-200 hover:border-primary"
-                        }`}
-                        onClick={() => setSelectedSlot(slot)}
-                      >
-                        <div className="font-semibold text-slate-900">
-                          {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
+                     <div
+                          key={index}
+                          className={`p-3 border rounded-lg cursor-pointer text-center transition-colors duration-300
+                            ${
+                              selectedSlot?.startTime === slot.startTime
+                                ? "bg-[#0084ff] border-[#0084ff] text-white" // seleccionado → fondo azul, texto blanco
+                                : "bg-white/90 border-slate-200 hover:bg-gray-200 text-slate-900" // normal
+                            }`}
+                          onClick={() => setSelectedSlot(slot)}
+                        >
+                          <div
+                            className={`font-semibold ${
+                              selectedSlot?.startTime === slot.startTime ? "text-white" : "text-slate-900"
+                            }`}
+                          >
+                            {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
+                          </div>
+                          <div
+                            className={`text-sm ${
+                              selectedSlot?.startTime === slot.startTime ? "text-white/90" : "text-slate-600"
+                            }`}
+                          >
+                            90 minutos
+                          </div>
                         </div>
-                        <div className="text-sm text-slate-600">90 minutos</div>
-                      </div>
                     ))}
                   </div>
                 ) : !loadingSlots ? (
@@ -428,10 +439,10 @@ export default function ReservarPage() {
 
             {/* Step 4: Datos personales */}
             {step === 4 && (
-              <div className="space-y-4">
-                <div className="mb-6 p-4 bg-primary/10 rounded-lg">
-                  <h3 className="font-semibold text-primary mb-2">Resumen de tu reserva</h3>
-                  <div className="text-sm text-primary/90 space-y-1">
+              <div className="space-y-4 bg-white/90 rounded-xl">
+                <div className="mb-6 p-4 rounded-lg">
+                  <h3 className="font-semibold text-black  mb-2">Resumen de tu reserva</h3>
+                  <div className="text-sm text-slate-800 space-y-1">
                     <p><strong>Sucursal:</strong> {selectedLocation?.name ?? "—"}</p>
                     <p><strong>Fecha:</strong> {selectedDate || "—"}</p>
                     <p>
@@ -443,7 +454,7 @@ export default function ReservarPage() {
                     <p><strong>Resta Abonar:</strong> $22.000</p>
                   </div>
                 </div>
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="p-4 text-slate-600 rounded-lg grid md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="fullName">Nombre completo</Label>
                     <Input

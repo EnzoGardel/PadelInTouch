@@ -7,22 +7,33 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock } from "lucide-react";
 
-// Importamos Tilt solo en el cliente (evita el error de Server Component)
+/** Cargamos react-parallax-tilt únicamente en cliente (sin SSR) */
 const Tilt = dynamic(() => import("react-parallax-tilt"), { ssr: false });
 
-// Wrapper opcional para no repetir props del Tilt
+/** Wrapper con fallback para evitar parpadeos / problemas de hidratación */
 function CardWithTilt({ children }: { children: React.ReactNode }) {
+  const [ready, setReady] = React.useState(false);
+  React.useEffect(() => setReady(true), []);
+
+  if (!ready) {
+    // Fallback sin tilt en el primer render del cliente
+    return <div className="will-change-auto">{children}</div>;
+  }
+
   return (
     <Tilt
-      glareEnable
-      glareMaxOpacity={0.2}
-      glareColor="#ffffff"
-      glareBorderRadius="16px"
-      scale={1.035}
       tiltMaxAngleX={8}
       tiltMaxAngleY={8}
-      transitionSpeed={1400}
-      className="will-change-transform"
+      perspective={900}
+      transitionSpeed={300}
+      gyroscope={true}
+      reset={true}
+      glareEnable
+      glareMaxOpacity={0.18}
+      glareColor="rgba(255,255,255,0.95)"
+      glareBorderRadius="16px"
+      scale={1.02}
+      className="will-change-transform motion-reduce:!transform-none"
     >
       {children}
     </Tilt>
