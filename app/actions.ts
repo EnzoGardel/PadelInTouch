@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { zonedTimeToUtc } from "date-fns-tz";
+import { fromZonedTime } from "date-fns-tz";
 
 export interface ReservationData {
   courtId: string;       // UUID de la cancha (table: courts.id)
@@ -24,7 +24,7 @@ const AR_TZ = "America/Argentina/Cordoba";
 function localToUTC(date: string, time: string) {
   // Ej: "2025-08-21" + "19:30" -> Date(UTC)
   const localIso = `${date}T${time}:00.000`;
-  return zonedTimeToUtc(localIso, AR_TZ);
+  return fromZonedTime(localIso, AR_TZ);
 }
 
 /**

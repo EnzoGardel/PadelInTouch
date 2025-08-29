@@ -14,6 +14,7 @@ import "react-day-picker/dist/style.css";
 import { es as esLocale } from "date-fns/locale";
 import { startOfToday, format as formatDate } from "date-fns";
 
+
 // ==== Tipos mapeados a tu API Supabase ====
 interface Club {
   id: string;
