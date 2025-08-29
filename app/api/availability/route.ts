@@ -2,7 +2,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createStaticClient } from "@/lib/supabase/server";
 import { parseISO, format } from "date-fns";
-import { utcToZonedTime } from "date-fns-tz";
+import { toZonedTime } from "date-fns-tz";
 
 const ARG_TZ = "America/Argentina/Cordoba";
 
@@ -38,11 +38,11 @@ export async function GET(request: NextRequest) {
     // Normalizamos para el front (start/end en HH:mm)
     const slots = (data ?? []).map((slot: any) => {
       const start = format(
-        utcToZonedTime(parseISO(slot.start_utc), ARG_TZ),
+        toZonedTime(parseISO(slot.start_utc), ARG_TZ),
         "HH:mm"
       );
       const end = format(
-        utcToZonedTime(parseISO(slot.end_utc), ARG_TZ),
+        toZonedTime(parseISO(slot.end_utc), ARG_TZ),
         "HH:mm"
       );
       return {
