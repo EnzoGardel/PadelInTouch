@@ -2,12 +2,13 @@ import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import { FlatCompat } from "@eslint/eslintrc";
 import path from "node:path";
+import next from '@next/eslint-plugin-next';
 
 const compat = new FlatCompat({ baseDirectory: path.resolve() });
 
 export default [
-  // Ignorar build y deps
-  { ignores: ["node_modules/**", ".next/**"] },
+  // Reglas Next (core web vitals)
+  next.configs['core-web-vitals'],
 
   // Reglas base JS
   js.configs.recommended,
