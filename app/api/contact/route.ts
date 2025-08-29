@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const validationResult = contactFormSchema.safeParse(body)
     if (!validationResult.success) {
       return NextResponse.json(
-        { error: "Datos del formulario inválidos", details: validationResult.error.errors },
+        { error: "Datos del formulario inválidos", details: validationResult.error.issues },
         { status: 400 },
       )
     }

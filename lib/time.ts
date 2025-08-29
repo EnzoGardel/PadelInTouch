@@ -1,11 +1,11 @@
 import { format, parseISO } from "date-fns"
-import { utcToZonedTime } from "date-fns-tz"
+import { toZonedTime } from "date-fns-tz"
 
 const ARGENTINA_TZ = "America/Argentina/Cordoba"
 
 export function formatTimeSlot(startUtc: string, endUtc: string): string {
-  const startLocal = utcToZonedTime(parseISO(startUtc), ARGENTINA_TZ)
-  const endLocal = utcToZonedTime(parseISO(endUtc), ARGENTINA_TZ)
+  const startLocal = toZonedTime(parseISO(startUtc), ARGENTINA_TZ)
+  const endLocal = toZonedTime(parseISO(endUtc), ARGENTINA_TZ)
 
   return `${format(startLocal, "HH:mm")} - ${format(endLocal, "HH:mm")}`
 }
