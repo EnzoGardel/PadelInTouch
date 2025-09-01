@@ -40,8 +40,8 @@ export function Navbar() {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className={`text-md font-semibold transition ${
-                        active ? "text-white" : "text-white/70 hover:text-white"
+                      className={`text-md font-semibold nav-link-underline ${
+                        active ? "text-white active" : "text-white/70 hover:text-white"
                       }`}
                     >
                       {item.label}
@@ -72,7 +72,7 @@ export function Navbar() {
                   <Link
                     href={item.href}
                     onClick={() => setIsOpen(false)}
-                    className="block rounded-md px-3 py-2 text-white/90 hover:bg-white/10"
+                    className="block rounded-md px-3 py-2 text-white/90 hover:bg-white/10 nav-link-underline"
                   >
                     {item.label}
                   </Link>

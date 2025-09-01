@@ -145,3 +145,104 @@
       0 10px 20px -5px rgba(0, 0, 0, 0.1);
   }
 }
+
+/* Efectos de subrayado para navbar */
+@layer components {
+  /* Subrayado que se desliza de derecha a izquierda */
+  .nav-link-underline {
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-link-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #0084ff);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 1px;
+  }
+  
+  .nav-link-underline:hover::after {
+    width: 100%;
+    right: auto;
+    left: 0;
+  }
+  
+  /* Subrayado activo */
+  .nav-link-underline.active::after {
+    width: 100%;
+    right: auto;
+    left: 0;
+    background: linear-gradient(90deg, #ffffff, #e5e7eb);
+  }
+  
+  /* Variante con efecto de expansión */
+  .nav-link-expand {
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-link-expand::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-50%);
+    border-radius: 1px;
+  }
+  
+  .nav-link-expand:hover::after {
+    width: 100%;
+  }
+  
+  .nav-link-expand.active::after {
+    width: 100%;
+    background: linear-gradient(90deg, #ffffff, #e5e7eb);
+  }
+  
+  /* Variante con gradiente animado */
+  .nav-link-gradient {
+    position: relative;
+    transition: color 0.3s ease;
+  }
+  
+  .nav-link-gradient::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    right: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+    background-size: 200% 100%;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 1px;
+    animation: gradient-shift 2s ease infinite;
+  }
+  
+  .nav-link-gradient:hover::after {
+    width: 100%;
+    right: auto;
+    left: 0;
+  }
+  
+  .nav-link-gradient.active::after {
+    width: 100%;
+    right: auto;
+    left: 0;
+    background: linear-gradient(90deg, #ffffff, #e5e7eb);
+  }
+  
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+}
