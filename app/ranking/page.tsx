@@ -93,7 +93,7 @@ const categories: Category[] = [
     id: "cuarta",
     name: "Cuarta",
     description: "Nivel intermedio",
-    icon: <Star className="h-5 w-5 text-blue-500" />,
+    icon: <Star className="h-5 w-5 text-white" />,
     players: generateMockData("cuarta", "M"),
   },
   {
@@ -152,7 +152,7 @@ const femaleCategories: Category[] = [
     id: "cuarta-f",
     name: "Cuarta",
     description: "Nivel intermedio",
-    icon: <Star className="h-5 w-5 text-blue-500" />,
+    icon: <Star className="h-5 w-5 text-white" />,
     players: generateMockData("cuarta", "F"),
   },
   {
@@ -291,7 +291,7 @@ export default function RankingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-white mb-4">Ranking de Pádel</h1>
+            <h1 className="text-4xl font-bold text-white mb-4">Ranking de Jugadores</h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               Descubre los mejores jugadores y jugadoras de cada categoría. 
               Desde la Primera hasta la Octava, cada nivel tiene sus campeones.

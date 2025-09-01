@@ -241,9 +241,9 @@
     background: linear-gradient(90deg, #ffffff, #e5e7eb);
   }
   
-  
+
   @keyframes gradient-shift {
-    0%, 100% { background-position: 0% 50%; }
+    0%, 100% { background-position: 0% 50%; }ñ
     50% { background-position: 100% 50%; }
   }
 }
