@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+// Forzar que esta ruta sea dinámica ya que usa parámetros de consulta
+export const dynamic = "force-dynamic";
+
 const MP_API = "https://api.mercadopago.com/v1/payments";
 
 function getSupabase() {

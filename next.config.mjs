@@ -5,9 +5,6 @@ const SUPABASE_HOST = process.env.NEXT_PUBLIC_SUPABASE_URL
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: { ignoreDuringBuilds: true },
-};
-
-export default {
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: SUPABASE_HOST ? [
@@ -17,3 +14,5 @@ export default {
     domains: SUPABASE_HOST ? [SUPABASE_HOST] : [],
   },
 };
+
+export default nextConfig;

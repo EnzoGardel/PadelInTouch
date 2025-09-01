@@ -2,40 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock } from "lucide-react";
-
-// Tilt solo en cliente
-const Tilt = dynamic(() => import("react-parallax-tilt"), { ssr: false });
-
-// Wrapper: evita glare inicial y habilita tilt tras el mount
-function CardWithTilt({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = React.useState(false);
-  React.useEffect(() => setMounted(true), []);
-  if (!mounted) {
-    return <div className="will-change-transform">{children}</div>;
-  }
-
-  return (
-    <Tilt
-      // Desactivamos glare para evitar el "velo" blanco inicial
-      glareEnable={false}
-      // Habilitamos el tilt solo cuando ya montó en cliente
-      tiltEnable={mounted}
-      scale={1.035}
-      tiltMaxAngleX={8}
-      tiltMaxAngleY={8}
-      transitionSpeed={1400}
-      gyroscope={true}   
-      reset
-      className="will-change-transform"
-    >
-      {children}
-    </Tilt>
-  );
-}
+import { Card3D } from "@/components/ui/parallax-card";
 
 export default function SedeSection() {
   return (
@@ -48,8 +18,8 @@ export default function SedeSection() {
 
         <div className="grid md:grid-cols-3 gap-8">
           {/* Centro */}
-          <CardWithTilt>
-            <Card className="hover:shadow-lg transition-shadow overflow-hidden border-0 bg-white/90 rounded-2xl">
+          <Card3D>
+            <Card className="overflow-hidden border-0 bg-white/90 rounded-2xl transform-gpu">
               <div className="h-48 md:h-52 w-full overflow-hidden">
                 <img
                   src="/canchas/cancha-sannicolas.webp"
@@ -87,11 +57,11 @@ export default function SedeSection() {
                 </Link>
               </CardContent>
             </Card>
-          </CardWithTilt>
+          </Card3D>
 
           {/* Lavalle */}
-          <CardWithTilt>
-            <Card className="hover:shadow-lg transition-shadow overflow-hidden h-full flex flex-col border-0 bg-white/90 rounded-2xl">
+          <Card3D>
+            <Card className="overflow-hidden h-full flex flex-col border-0 bg-white/90 rounded-2xl transform-gpu">
               <div className="h-48 md:h-52 w-full overflow-hidden">
                 <img
                   src="/canchas/cancha-lavalle.webp"
@@ -129,11 +99,11 @@ export default function SedeSection() {
                 </Link>
               </CardContent>
             </Card>
-          </CardWithTilt>
+          </Card3D>
 
           {/* Abasto */}
-          <CardWithTilt>
-            <Card className="group relative overflow-hidden h-full flex flex-col rounded-2xl border-0 bg-white/90 transition-shadow hover:shadow-lg">
+          <Card3D>
+            <Card className="group relative overflow-hidden h-full flex flex-col rounded-2xl border-0 bg-white/90 transform-gpu">
               <div className="relative z-10 h-48 md:h-52 w-full overflow-hidden">
                 <img
                   src="/canchas/cancha-abasto.webp"
@@ -171,7 +141,7 @@ export default function SedeSection() {
                 </Link>
               </CardContent>
             </Card>
-          </CardWithTilt>
+          </Card3D>
         </div>
       </div>
     </section>

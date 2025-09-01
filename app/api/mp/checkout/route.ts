@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { MercadoPagoConfig, Preference } from "mercadopago";
 
+// Forzar que esta ruta sea dinámica ya que usa parámetros de consulta
+export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 function getBaseUrl(req: Request) {

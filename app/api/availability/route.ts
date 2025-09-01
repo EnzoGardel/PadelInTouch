@@ -4,11 +4,14 @@ import { createStaticClient } from "@/lib/supabase/server";
 import { parseISO, format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 
+// Forzar que esta ruta sea dinámica ya que usa parámetros de consulta
+export const dynamic = "force-dynamic";
+
 const ARG_TZ = "America/Argentina/Cordoba";
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = request.nextUrl;
     const clubId = searchParams.get("clubId"); // = branch_id
     const date = searchParams.get("date");     // YYYY-MM-DD
 
