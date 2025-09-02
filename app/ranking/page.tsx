@@ -282,6 +282,11 @@ export default function RankingPage() {
   // Obtener el ID de categoría actual según el género
   const currentCategoryId = getCategoryId(currentCategory);
 
+  // 👉 Nueva lógica para indicador responsivo
+  const tabs = selectedGender === "M" ? categories : femaleCategories;
+  const cols = tabs.length; // 8
+  const activeIndex = getCategoryIndex(currentCategoryId); // 0..cols-1
+
   return (
     <>
       <Navbar />
@@ -300,66 +305,83 @@ export default function RankingPage() {
 
           {/* Selector de género */}
           <div className="flex justify-center mb-8">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-1 relative">
-              {/* Indicador deslizante */}
-              <div 
-                className={`absolute top-1 bottom-1 rounded-md shadow-lg transition-all duration-500 ease-out ${
-                  selectedGender === "M" ? "left-1 w-[calc(50%-4px)]" : "right-1 w-[calc(50%-4px)]"
-                }`}
-                style={{ backgroundColor: '#0084ff',
-                }}
-              />
-              <button
-                onClick={() => handleGenderChange("M")}
-                className={`relative px-4 py-1.5 rounded-md font-medium ${
-                  selectedGender === "M" 
-                    ? "text-white" 
-                    : "text-gray-300 hover:text-white hover:scale-105"
-                }`}
+            <div className="w-full max-w-sm">
+              <div
+                className="relative grid grid-cols-2 bg-white/10 backdrop-blur-sm rounded-lg p-1"
+                // el grid garantiza 2 columnas iguales en cualquier ancho
               >
-                Masculino
-              </button>
-              <button
-                onClick={() => handleGenderChange("F")}
-                className={`relative px-4 py-1.5 rounded-md font-medium transition-all duration-300 ${
-                  selectedGender === "F" 
-                    ? "text-white" 
-                    : "text-gray-300 hover:text-white hover:scale-105"
-                }`}
-              >
-                Femenino
-              </button>
+                {/* Indicador deslizante (mitad exacta del contenedor) */}
+                <span
+                  className="pointer-events-none absolute top-1 bottom-1 left-1 rounded-md shadow-lg bg-[#0084ff]
+                            transition-transform duration-300 ease-[cubic-bezier(.22,.61,.36,1)] will-change-transform"
+                  style={{
+                    // p-1 = 0.25rem por lado => restamos 0.25rem a la mitad
+                    width: "calc(50% - 0.25rem)",
+                    transform: selectedGender === "M" ? "translateX(0%)" : "translateX(100%)",
+                  }}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => handleGenderChange("M")}
+                  className={`relative z-10 px-4 py-1.5 rounded-md font-medium transition-colors
+                              ${selectedGender === "M" ? "text-white" : "text-gray-300 hover:text-white"}`}
+                  aria-pressed={selectedGender === "M"}
+                >
+                  Masculino
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleGenderChange("F")}
+                  className={`relative z-10 px-4 py-1.5 rounded-md font-medium transition-colors
+                              ${selectedGender === "F" ? "text-white" : "text-gray-300 hover:text-white"}`}
+                  aria-pressed={selectedGender === "F"}
+                >
+                  Femenino
+                </button>
+              </div>
             </div>
           </div>
 
-                     {/* Tabs de categorías */}
-           <Tabs value={currentCategoryId} onValueChange={handleCategoryChange} className="w-full">
-             <TabsList className="grid w-full grid-cols-8 bg-white/10 backdrop-blur-sm relative overflow-hidden p-1 [&>button]:bg-transparent [&>button[data-state=active]]:bg-transparent">
-               {/* Indicador deslizante para categorías */}
-               <div 
-                 className="absolute top-1 bottom-1 rounded-md shadow-lg transition-all duration-500 ease-out"
-                 style={{
-                   left: `${(getCategoryIndex(currentCategoryId) * 100 / 8) + 1}%`,
-                   width: `130px`,
-                   backgroundColor: '#0084ff'
-                 }}
-               />
-                               {(selectedGender === "M" ? categories : femaleCategories).map((category) => (
-                  <TabsTrigger
-                    key={category.id}
-                    value={category.id}
-                    className="relative flex items-center gap-2 text-white data-[state=active]:text-white data-[state=active]:bg-transparent transition-all duration-300 hover:scale-105 hover:bg-white/10 rounded-md "
-                    style={{
-                      backgroundColor: 'transparent'
-                    }}
-                  >
-                    {category.icon}
-                    <span className="hidden sm:inline">{category.name}</span>
-                  </TabsTrigger>
-                ))}
-             </TabsList>
-
-            {(selectedGender === "M" ? categories : femaleCategories).map((category) => (
+          {/* Tabs de categorías */}
+          <Tabs value={currentCategoryId} onValueChange={handleCategoryChange} className="w-full">
+            <TabsList
+              className="relative w-full bg-white/10 backdrop-blur-sm overflow-hidden p-1
+                         [&>button]:bg-transparent [&>button[data-state=active]]:bg-transparent"
+              style={{
+                display: "grid",
+                gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+                gap: 0,
+              }}
+            >
+              {/* Indicador deslizante para categorías — ancho 1 columna, responsivo */}
+              <div
+                className="absolute top-1 bottom-1 left-1 rounded-md shadow-lg transition-transform duration-500 ease-out"
+                style={{
+                  // p-1 = 0.25rem por lado => total 0.5rem
+                  width: `calc((100% - 0.5rem) / ${cols})`,
+                  transform: `translateX(calc(${activeIndex} * 100%))`,
+                  backgroundColor: "#0084ff",
+                }}
+              />
+              
+              {tabs.map((category) => (
+                <TabsTrigger
+                  key={category.id}
+                  value={category.id}
+                  className="relative flex items-center gap-2 text-white
+                             data-[state=active]:text-white data-[state=active]:bg-transparent
+                             transition-all duration-300 hover:scale-105 hover:bg-white/10 rounded-md"
+                  style={{ backgroundColor: "transparent" }}
+                >
+                  {category.icon}
+                  <span className="hidden sm:inline">{category.name}</span>
+                </TabsTrigger>
+              ))}
+            </TabsList>
+                
+            {tabs.map((category) => (
               <TabsContent key={category.id} value={category.id} className="mt-6">
                 <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl py-4">
                   <CardHeader>

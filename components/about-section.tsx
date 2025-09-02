@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Icons } from "@/components/icons"
 
+
 export function AboutSection() {
   const features = [
     {
@@ -14,20 +15,25 @@ export function AboutSection() {
       title: "Escuela de pádel",
       description:
         "Entrenamiento funcional y clases para todos los niveles con instructores certificados y metodología moderna.",
+
     },
     {
       icon: Icons.Target,
       title: "Comunidad competitiva",
       description:
         "Torneos regulares, ligas internas y eventos que fomentan el crecimiento deportivo y social de nuestros socios.",
+
     },
     {
       icon: Icons.Star,
       title: "Historia de campeones",
       description:
         "Orgullo local: en nuestros inicios entrenó aquí el actual Nº1 del pádel mundial, formando parte de nuestra rica historia deportiva.",
+
+        
     },
   ]
+
 
   return (
     <section id="sobre-nosotros" className="py-20 ">
@@ -42,9 +48,9 @@ export function AboutSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {features.map((feature, index) => (
-            <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300 bg-white/90">
+            <Card key={index} className="group relative text-center rounded-2xl bg-white/90 transition duration-300 hover:-translate-y-2 hover:scale-105 hover:shadow-2xl hover:ring-2 hover:ring-primary/40">
               <CardContent className="p-6">
-                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 transform transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
                   <feature.icon />
                 </div>
                 <h3 className="text-lg font-semibold mb-3">{feature.title}</h3>
@@ -55,10 +61,10 @@ export function AboutSection() {
         </div>
 
         {/* Champion highlight */}
-        <div className=" bg-white/90 hover:shadow-lg transition-shadow duration-300 rounded-2xl p-8 md:p-12 text-center border border-primary/10">
+        <div  className="group relative text-center py-6 rounded-2xl bg-white/90 transition duration-300 hover:-translate-y-2 hover:scale-102 hover:shadow-2xl hover:ring-2 hover:ring-primary/40">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-center mb-6">
-              <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center">
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 transform transition-transform duration-300 group-hover:rotate-12 group-hover:scale-110">
                 <Icons.Trophy />
               </div>
             </div>

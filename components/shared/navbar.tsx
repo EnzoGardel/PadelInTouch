@@ -109,39 +109,39 @@ function MobileHamburgerMenu({
                   transition={{ duration: 0.22, ease: "easeOut" }}
                   className="grid grid-cols-1 gap-8 overflow-y-auto px-5 pb-10 md:grid-cols-[1fr_340px] md:gap-12 md:px-10"
                 >
-{/* Links grandes con + */}
-<nav className="flex flex-col gap-3 pt-2">
-  {items.map((item, i) => (
-    <motion.div
-      key={item.href}
-      initial={{ opacity: 0, x: -8 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.18, delay: 0.04 * i }}
-    >
-      <Link
-        href={item.href}
-        target={item.target}
-        rel={item.target === "_blank" ? "noreferrer" : undefined}
-        onClick={() => setOpen(false)}
-        className="group inline-flex items-center gap-3 text-4xl font-semibold leading-[1.1] text-white hover:text-white/90 sm:text-5xl"
-      >
-        <span className="tracking-tight">{item.label}</span>
-        <Plus className="h-5 w-5 text-white/50 transition-transform group-hover:rotate-90" />
-      </Link>
-    </motion.div>
-  ))}
-</nav>
+                {/* Links grandes con + */}
+                <nav className="flex flex-col gap-3 pt-2">
+                  {items.map((item, i) => (
+                    <motion.div
+                      key={item.href}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: 0.04 * i }}
+                    >
+                      <Link
+                        href={item.href}
+                        target={item.target}
+                        rel={item.target === "_blank" ? "noreferrer" : undefined}
+                        onClick={() => setOpen(false)}
+                        className="group inline-flex items-center gap-3 text-4xl font-semibold leading-[1.1] text-white hover:text-white/90 sm:text-5xl"
+                      >
+                        <span className="tracking-tight">{item.label}</span>
+                        <Plus className="h-5 w-5 text-white/50 transition-transform group-hover:rotate-90" />
+                      </Link>
+                    </motion.div>
+                  ))}
+                </nav>
 
-{/* --- CTA FIJO ABAJO --- */}
-<div className="fixed inset-x-0 bottom-0 z-[1001] p-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]">
-  <Button
-    asChild
-    className="w-full rounded-full bg-primary hover:bg-[#0084ff] text-white text-base py-6 shadow-xl shadow-black/30"
-    onClick={() => setOpen(false)}
-  >
-    <Link href="/reserva">¡Reservá tu cancha!</Link>
-  </Button>
-</div>
+                {/* --- CTA FIJO ABAJO --- */}
+                <div className="fixed inset-x-0 bottom-0 z-[1001] p-4 pb-[calc(env(safe-area-inset-bottom,0px)+16px)]">
+                  <Button
+                    asChild
+                    className="w-full rounded-full bg-primary hover:bg-[#0084ff] text-white text-base py-6 shadow-xl shadow-black/30"
+                    onClick={() => setOpen(false)}
+                  >
+                    <Link href="/reserva">¡Reservá tu cancha!</Link>
+                  </Button>
+                </div>
                   {/* Columna derecha: contacto y redes */}
                   <aside className="flex flex-col gap-4 text-white/80">
                     {(contact?.phone || contact?.email) && (

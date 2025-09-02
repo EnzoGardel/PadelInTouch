@@ -66,7 +66,7 @@ const TOURNAMENTS: Tournament[] = [
     location: "Rosario, Santa Fe.",
     startDate: `${Y}-02-14`,
     endDate: `${Y}-02-16`,
-    bannerUrl: "/images/torneos/apertura.jpg",
+    bannerUrl: "/torneos/torneo-1.png",
     resultsUrl: "/torneos/t-01",
   },
   {
@@ -75,7 +75,7 @@ const TOURNAMENTS: Tournament[] = [
     location: "Rosario, Santa Fe.",
     startDate: `${Y}-04-05`,
     endDate: `${Y}-04-07`,
-    bannerUrl: "/images/torneos/otono.jpg",
+    bannerUrl: "/torneos/torneo-2.png",
   },
   {
     id: "t-03",
@@ -83,7 +83,7 @@ const TOURNAMENTS: Tournament[] = [
     location: "Rosario, Santa Fe.",
     startDate: `${Y}-07-19`,
     endDate: `${Y}-07-21`,
-    bannerUrl: "/images/torneos/invierno.jpg",
+    bannerUrl: "/torneos/torneo-3.png",
   },
   {
     id: "t-04",
@@ -117,7 +117,7 @@ function TournamentCard({ t }: { t: Tournament }) {
     <Card className="overflow-hidden border-0 shadow-xl bg-white/95 py-5">
       {t.bannerUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={t.bannerUrl} alt="banner torneo" className="h-36 w-full object-cover" />
+        <img src={t.bannerUrl} alt="banner torneo" className="h-60 w-full object-containt" />
       ) : null}
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-3">
